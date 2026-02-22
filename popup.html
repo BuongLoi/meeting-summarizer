@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ghi âm & Tóm tắt Meeting</title>
-  <meta name="description" content="Upload file ghi âm cuộc họp, nhận lại transcript, tóm tắt và action items trong vài giây.">
+  <meta name="description"
+    content="Upload file ghi âm cuộc họp, nhận lại transcript, tóm tắt và action items trong vài giây.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
 
   <!--
     ╔══════════════════════════════════════════════════╗
@@ -48,6 +52,7 @@
       --error-bg: rgba(239, 68, 68, 0.1);
       --info: #06b6d4;
       --info-bg: rgba(6, 182, 212, 0.1);
+      --rec-color: #ef4444;
 
       --radius-sm: 8px;
       --radius-md: 12px;
@@ -65,7 +70,9 @@
     }
 
     /* ========== Reset & Base ========== */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -85,7 +92,6 @@
       overflow-x: hidden;
     }
 
-    /* Background gradient orbs */
     body::before,
     body::after {
       content: '';
@@ -96,6 +102,7 @@
       pointer-events: none;
       z-index: 0;
     }
+
     body::before {
       width: 400px;
       height: 400px;
@@ -103,6 +110,7 @@
       top: -100px;
       right: -100px;
     }
+
     body::after {
       width: 350px;
       height: 350px;
@@ -143,8 +151,15 @@
     }
 
     @keyframes pulse-glow {
-      0%, 100% { box-shadow: var(--shadow-glow); }
-      50% { box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(139, 92, 246, 0.15); }
+
+      0%,
+      100% {
+        box-shadow: var(--shadow-glow);
+      }
+
+      50% {
+        box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(139, 92, 246, 0.15);
+      }
     }
 
     .app-header__title {
@@ -162,11 +177,10 @@
       font-size: 0.85rem;
       margin-top: 6px;
       max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-inline: auto;
     }
 
-    /* ========== Main Content Grid ========== */
+    /* ========== Grid ========== */
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -195,6 +209,10 @@
       border-color: rgba(255, 255, 255, 0.15);
     }
 
+    .card+.card {
+      margin-top: 12px;
+    }
+
     .card__title {
       font-size: 0.9rem;
       font-weight: 600;
@@ -213,6 +231,181 @@
       background: var(--bg-glass);
       border-radius: var(--radius-sm);
       font-size: 14px;
+    }
+
+    /* ========== Recorder ========== */
+    .recorder {
+      text-align: center;
+    }
+
+    .recorder__controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .rec-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: all var(--transition-normal);
+      position: relative;
+    }
+
+    .rec-btn--start {
+      background: var(--rec-color);
+      color: white;
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    .rec-btn--start:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+    }
+
+    .rec-btn--start.recording {
+      animation: rec-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes rec-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+      }
+    }
+
+    .rec-btn--pause,
+    .rec-btn--stop {
+      width: 38px;
+      height: 38px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      color: var(--text-secondary);
+      font-size: 16px;
+      display: none;
+    }
+
+    .rec-btn--pause:hover,
+    .rec-btn--stop:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .recorder.active .rec-btn--pause,
+    .recorder.active .rec-btn--stop {
+      display: inline-flex;
+    }
+
+    .rec-timer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .rec-timer.active {
+      color: var(--rec-color);
+    }
+
+    .rec-waveform {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 30px;
+      margin-bottom: 4px;
+    }
+
+    .rec-waveform__bar {
+      width: 3px;
+      background: var(--text-muted);
+      border-radius: 2px;
+      transition: height 0.15s ease;
+      height: 6px;
+    }
+
+    .recorder.active .rec-waveform__bar {
+      background: var(--rec-color);
+      animation: wave 0.8s ease-in-out infinite;
+    }
+
+    @keyframes wave {
+
+      0%,
+      100% {
+        height: 6px;
+      }
+
+      50% {
+        height: 24px;
+      }
+    }
+
+    .rec-waveform__bar:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .rec-waveform__bar:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .rec-waveform__bar:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .rec-waveform__bar:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+
+    .rec-waveform__bar:nth-child(5) {
+      animation-delay: 0.15s;
+    }
+
+    .rec-waveform__bar:nth-child(6) {
+      animation-delay: 0.25s;
+    }
+
+    .rec-waveform__bar:nth-child(7) {
+      animation-delay: 0.05s;
+    }
+
+    .rec-status {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .recorder.active .rec-status {
+      color: var(--rec-color);
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 0;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-glass);
     }
 
     /* ========== Upload Zone ========== */
@@ -261,7 +454,6 @@
       cursor: pointer;
     }
 
-    /* File info */
     .file-info {
       display: none;
       background: var(--bg-glass);
@@ -278,8 +470,15 @@
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .file-info__name {
@@ -309,6 +508,40 @@
       border-radius: var(--radius-sm);
       margin-top: 8px;
       font-size: 0.78rem;
+    }
+
+    /* ========== Progress Bar ========== */
+    .progress-container {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .progress-container.visible {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    .progress-bar-wrap {
+      height: 6px;
+      background: var(--bg-glass);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-gradient);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
     }
 
     /* ========== Form Controls ========== */
@@ -370,7 +603,7 @@
       gap: 10px;
     }
 
-    /* Toggle Switch */
+    /* Toggle */
     .toggle-group {
       display: flex;
       align-items: center;
@@ -421,17 +654,17 @@
       transition: all var(--transition-normal);
     }
 
-    .toggle-switch input:checked + .toggle-switch__slider {
+    .toggle-switch input:checked+.toggle-switch__slider {
       background: var(--accent-primary);
       border-color: var(--accent-primary);
     }
 
-    .toggle-switch input:checked + .toggle-switch__slider::before {
+    .toggle-switch input:checked+.toggle-switch__slider::before {
       transform: translateX(18px);
       background: white;
     }
 
-    /* ========== Primary Button ========== */
+    /* ========== Buttons ========== */
     .btn-primary {
       width: 100%;
       padding: 12px 20px;
@@ -479,7 +712,6 @@
       display: none;
     }
 
-    /* Spinner */
     .spinner {
       width: 18px;
       height: 18px;
@@ -490,7 +722,9 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .loading-text {
@@ -507,11 +741,42 @@
     }
 
     @keyframes fadeInOut {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
+
+      0%,
+      100% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+      }
     }
 
-    /* ========== Results Panel ========== */
+    .btn-secondary {
+      flex: 1;
+      padding: 9px 14px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+
+    /* ========== Results ========== */
     .results-panel {
       display: flex;
       flex-direction: column;
@@ -534,7 +799,6 @@
       font-size: 0.85rem;
     }
 
-    /* Tabs */
     .tabs {
       display: flex;
       gap: 2px;
@@ -546,13 +810,13 @@
 
     .tab-btn {
       flex: 1;
-      padding: 8px 6px;
+      padding: 8px 4px;
       background: transparent;
       border: none;
       border-radius: 6px;
       color: var(--text-muted);
       font-family: inherit;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 500;
       cursor: pointer;
       transition: all var(--transition-fast);
@@ -569,7 +833,6 @@
       box-shadow: var(--shadow-sm);
     }
 
-    /* Tab content */
     .tab-content {
       display: none;
       animation: fadeIn 0.3s ease;
@@ -580,11 +843,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
-    /* Summary list */
     .summary-list {
       list-style: none;
       display: flex;
@@ -607,7 +874,6 @@
       background: var(--bg-card-hover);
     }
 
-    /* Action items */
     .action-items-list {
       display: flex;
       flex-direction: column;
@@ -680,7 +946,6 @@
       text-decoration: line-through;
     }
 
-    /* Transcript */
     .transcript-box {
       background: var(--bg-glass);
       border: 1px solid var(--border-glass);
@@ -709,115 +974,108 @@
       border-radius: 3px;
     }
 
-    /* Action buttons */
     .result-actions {
       display: flex;
       gap: 8px;
       margin-top: 16px;
     }
 
-    .btn-secondary {
-      flex: 1;
-      padding: 9px 14px;
+    /* ========== History ========== */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .history-list:empty::after {
+      content: 'Chưa có lịch sử nào.';
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .history-item {
+      padding: 12px 14px;
       background: var(--bg-glass);
-      border: 1px solid var(--border-glass);
       border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      font-family: inherit;
-      font-size: 0.8rem;
-      font-weight: 500;
       cursor: pointer;
       transition: all var(--transition-fast);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      border-left: 3px solid var(--border-glass);
     }
 
-    .btn-secondary:hover {
+    .history-item:hover {
       background: var(--bg-card-hover);
-      border-color: var(--accent-primary);
-      color: var(--text-primary);
+      border-left-color: var(--accent-primary);
     }
 
-    /* ========== Toast Notifications ========== */
-    .toast-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
+    .history-item__header {
       display: flex;
-      flex-direction: column-reverse;
-      gap: 8px;
-      pointer-events: none;
-    }
-
-    .toast {
-      pointer-events: auto;
-      padding: 12px 18px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      font-size: 0.82rem;
-      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-lg);
-      backdrop-filter: blur(16px);
-      animation: toastIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      max-width: 320px;
+      margin-bottom: 4px;
     }
 
-    .toast.toast-out {
-      animation: toastOut 0.3s ease forwards;
-    }
-
-    .toast--success {
-      border-left: 3px solid var(--success);
-    }
-
-    .toast--error {
-      border-left: 3px solid var(--error);
-    }
-
-    .toast--info {
-      border-left: 3px solid var(--info);
-    }
-
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(40px) scale(0.95); }
-      to { opacity: 1; transform: translateX(0) scale(1); }
-    }
-
-    @keyframes toastOut {
-      from { opacity: 1; transform: translateX(0) scale(1); }
-      to { opacity: 0; transform: translateX(40px) scale(0.95); }
-    }
-
-    /* ========== API Key section ========== */
-    .api-key-section {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border-glass);
-    }
-
-    .api-key-hint {
+    .history-item__date {
       font-size: 0.72rem;
       color: var(--text-muted);
-      margin-top: 4px;
     }
 
-    .api-key-hint a {
-      color: var(--accent-primary);
-      text-decoration: none;
+    .history-item__delete {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all var(--transition-fast);
     }
 
-    .api-key-hint a:hover {
-      text-decoration: underline;
+    .history-item__delete:hover {
+      color: var(--error);
+      background: var(--error-bg);
     }
 
-    /* ========== Step indicator ========== */
+    .history-item__name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .history-item__preview {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .history-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .btn-danger {
+      padding: 6px 12px;
+      background: var(--error-bg);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius-sm);
+      color: var(--error);
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* ========== Step Indicator ========== */
     .step-indicator {
       display: none;
       margin-top: 12px;
@@ -863,11 +1121,25 @@
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.5); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.5);
+      }
     }
 
-    /* ========== Error state ========== */
+    .step-elapsed {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Error */
     .error-message {
       display: none;
       background: var(--error-bg);
@@ -884,60 +1156,166 @@
       animation: slideIn 0.3s ease;
     }
 
-    /* ========== Responsive - popup mode ========== */
+    /* API Key */
+    .api-key-section {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-glass);
+    }
+
+    .api-key-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .api-key-hint a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+
+    .api-key-hint a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========== Toast ========== */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      padding: 12px 18px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(16px);
+      animation: toastIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 320px;
+    }
+
+    .toast.toast-out {
+      animation: toastOut 0.3s ease forwards;
+    }
+
+    .toast--success {
+      border-left: 3px solid var(--success);
+    }
+
+    .toast--error {
+      border-left: 3px solid var(--error);
+    }
+
+    .toast--info {
+      border-left: 3px solid var(--info);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(40px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes toastOut {
+      from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+
+      to {
+        opacity: 0;
+        transform: translateX(40px) scale(0.95);
+      }
+    }
+
+    /* ========== Responsive ========== */
     @media (max-width: 460px) {
       .app-container {
         padding: 10px;
       }
+
       .app-header {
         padding: 16px 10px 14px;
       }
+
       .app-header__title {
         font-size: 1.25rem;
       }
+
       .card {
         padding: 14px;
       }
+
       .form-row {
         grid-template-columns: 1fr;
       }
+
       .result-actions {
         flex-direction: column;
-      }
-      .tabs {
-        flex-wrap: wrap;
       }
     }
   </style>
 </head>
+
 <body>
 
   <div class="app-container">
-    <!-- ===== HEADER ===== -->
     <header class="app-header">
       <div class="app-header__logo">🎙️</div>
       <h1 class="app-header__title">Ghi âm & Tóm tắt Meeting</h1>
-      <p class="app-header__subtitle">Upload file ghi âm, nhận lại transcript, tóm tắt và action items trong vài giây.</p>
+      <p class="app-header__subtitle">Ghi âm trực tiếp hoặc upload file, nhận transcript, tóm tắt và action items.</p>
     </header>
 
-    <!-- ===== MAIN GRID ===== -->
     <div class="main-grid">
-
-      <!-- ===== LEFT COLUMN: Upload & Config ===== -->
+      <!-- ===== LEFT COLUMN ===== -->
       <div class="left-column">
-        <!-- Upload Card -->
+        <!-- Recorder Card -->
         <div class="card">
-          <div class="card__title">
-            <span class="card__title-icon">📁</span>
-            Upload file ghi âm
+          <div class="card__title"><span class="card__title-icon">🎤</span> Ghi âm trực tiếp</div>
+          <div class="recorder" id="recorder">
+            <div class="rec-waveform">
+              <div class="rec-waveform__bar"></div>
+              <div class="rec-waveform__bar"></div>
+              <div class="rec-waveform__bar"></div>
+              <div class="rec-waveform__bar"></div>
+              <div class="rec-waveform__bar"></div>
+              <div class="rec-waveform__bar"></div>
+              <div class="rec-waveform__bar"></div>
+            </div>
+            <div class="rec-timer" id="recTimer">00:00</div>
+            <div class="recorder__controls">
+              <button class="rec-btn rec-btn--start" id="btnRecStart" title="Bắt đầu ghi âm">⏺</button>
+              <button class="rec-btn rec-btn--pause" id="btnRecPause" title="Tạm dừng">⏸</button>
+              <button class="rec-btn rec-btn--stop" id="btnRecStop" title="Dừng & lưu">⏹</button>
+            </div>
+            <div class="rec-status" id="recStatus">Nhấn nút đỏ để bắt đầu ghi âm</div>
           </div>
+
+          <div class="separator">hoặc</div>
 
           <div class="upload-zone" id="uploadZone">
             <span class="upload-zone__icon">🎵</span>
-            <div class="upload-zone__text">
-              Kéo thả file vào đây hoặc <strong>chọn file</strong>
-            </div>
-            <div class="upload-zone__formats">.mp3, .wav, .m4a – Tối đa 25MB</div>
+            <div class="upload-zone__text">Kéo thả file vào đây hoặc <strong>chọn file</strong></div>
+            <div class="upload-zone__formats">.mp3, .wav, .m4a – Tối đa 2GB</div>
             <input type="file" id="fileInput" accept=".mp3,.wav,.m4a,audio/mpeg,audio/wav,audio/mp4,audio/x-m4a">
           </div>
 
@@ -949,151 +1327,120 @@
             </div>
             <div class="file-info__warning" id="fileWarning" style="display:none;"></div>
           </div>
+
+          <!-- Upload progress -->
+          <div class="progress-container" id="uploadProgress">
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" id="uploadProgressFill"></div>
+            </div>
+            <div class="progress-info"><span id="uploadProgressText">Đang upload...</span><span
+                id="uploadProgressPct">0%</span></div>
+          </div>
         </div>
 
         <!-- Config Card -->
-        <div class="card" style="margin-top: 12px;">
-          <div class="card__title">
-            <span class="card__title-icon">⚙️</span>
-            Cấu hình
-          </div>
-
+        <div class="card">
+          <div class="card__title"><span class="card__title-icon">⚙️</span> Cấu hình</div>
           <div class="form-row">
-            <div class="form-group">
-              <label for="meetingLang">🌐 Ngôn ngữ cuộc họp</label>
-              <select class="form-select" id="meetingLang">
+            <div class="form-group"><label for="meetingLang">🌐 Ngôn ngữ cuộc họp</label><select class="form-select"
+                id="meetingLang">
                 <option value="vi">Tiếng Việt</option>
                 <option value="en">English</option>
                 <option value="auto">Tự nhận diện</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="detailLevel">📊 Độ chi tiết</label>
-              <select class="form-select" id="detailLevel">
+              </select></div>
+            <div class="form-group"><label for="detailLevel">📊 Độ chi tiết</label><select class="form-select"
+                id="detailLevel">
                 <option value="brief">Ngắn gọn</option>
                 <option value="standard" selected>Chuẩn</option>
                 <option value="detailed">Chi tiết</option>
-              </select>
-            </div>
+              </select></div>
           </div>
-
           <div class="form-row">
-            <div class="form-group">
-              <label for="outputLang">📝 Ngôn ngữ tóm tắt</label>
-              <select class="form-select" id="outputLang">
+            <div class="form-group"><label for="outputLang">📝 Ngôn ngữ tóm tắt</label><select class="form-select"
+                id="outputLang">
                 <option value="vi">Tiếng Việt</option>
                 <option value="en">English</option>
                 <option value="same">Giống cuộc họp</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="summaryTone">🎨 Tone tóm tắt</label>
-              <select class="form-select" id="summaryTone">
+              </select></div>
+            <div class="form-group"><label for="summaryTone">🎨 Tone tóm tắt</label><select class="form-select"
+                id="summaryTone">
                 <option value="neutral" selected>Trung lập</option>
                 <option value="friendly">Thân thiện</option>
                 <option value="formal">Formal</option>
-              </select>
-            </div>
+              </select></div>
           </div>
-
           <div class="toggle-group">
             <span class="toggle-group__label">🎯 Tập trung vào action items & quyết định</span>
-            <label class="toggle-switch">
-              <input type="checkbox" id="focusActions" checked>
-              <span class="toggle-switch__slider"></span>
-            </label>
+            <label class="toggle-switch"><input type="checkbox" id="focusActions" checked><span
+                class="toggle-switch__slider"></span></label>
           </div>
-
-          <!-- API Key -->
           <div class="api-key-section">
-            <div class="form-group" style="margin-top:0;">
-              <label for="apiKey">🔑 Gemini API Key</label>
-              <input type="password" class="form-input" id="apiKey" placeholder="AIzaSy...">
-              <div class="api-key-hint">Lấy key tại <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> – Key được lưu cục bộ.</div>
+            <div class="form-group" style="margin-top:0;"><label for="apiKey">🔑 Gemini API Key</label><input
+                type="password" class="form-input" id="apiKey" placeholder="AIzaSy...">
+              <div class="api-key-hint">Lấy key tại <a href="https://aistudio.google.com/apikey" target="_blank"
+                  rel="noopener">Google AI Studio</a> – Key được mã hóa và lưu cục bộ.</div>
             </div>
           </div>
-
-          <!-- Submit -->
           <button class="btn-primary" id="btnSubmit" disabled>
             <span class="btn-text">✨ Tóm tắt cuộc họp</span>
             <span class="spinner"></span>
             <span class="loading-btn-text" style="display:none;">Đang xử lý...</span>
           </button>
-
-          <!-- Step indicator -->
           <div class="step-indicator" id="stepIndicator">
-            <div class="step-indicator__step" id="step1">
-              <span class="step-dot"></span>
-              Chuyển đổi audio thành văn bản...
+            <div class="step-indicator__step" id="step1"><span class="step-dot"></span>Chuyển đổi audio thành văn bản...
             </div>
-            <div class="step-indicator__step" id="step2">
-              <span class="step-dot"></span>
-              Phân tích & tóm tắt nội dung...
+            <div class="step-indicator__step" id="step2"><span class="step-dot"></span>Phân tích & tóm tắt nội dung...
             </div>
-            <div class="step-indicator__step" id="step3">
-              <span class="step-dot"></span>
-              Trích xuất action items...
+            <div class="step-indicator__step" id="step3"><span class="step-dot"></span>Trích xuất action items...</div>
+            <div class="step-elapsed" id="stepElapsed"></div>
+          </div>
+          <div class="loading-text" id="loadingText">⏳ Đang transcribe & tóm tắt, vui lòng chờ…</div>
+
+          <!-- Processing progress -->
+          <div class="progress-container" id="processProgress">
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" id="processProgressFill"></div>
             </div>
+            <div class="progress-info"><span id="processProgressText">Đang xử lý...</span><span
+                id="processProgressPct">0%</span></div>
           </div>
 
-          <!-- Loading text -->
-          <div class="loading-text" id="loadingText">
-            ⏳ Đang transcribe & tóm tắt, vui lòng chờ…
-          </div>
-
-          <!-- Error message -->
           <div class="error-message" id="errorMessage"></div>
         </div>
       </div>
 
-      <!-- ===== RIGHT COLUMN: Results ===== -->
+      <!-- ===== RIGHT COLUMN ===== -->
       <div class="right-column">
         <div class="card results-panel">
-          <div class="card__title">
-            <span class="card__title-icon">📋</span>
-            Kết quả
-          </div>
-
-          <!-- Empty state -->
+          <div class="card__title"><span class="card__title-icon">📋</span> Kết quả</div>
           <div class="results-empty" id="resultsEmpty">
             <span class="results-empty__icon">📄</span>
-            <p class="results-empty__text">Upload file ghi âm và nhấn "Tóm tắt cuộc họp" để xem kết quả tại đây.</p>
+            <p class="results-empty__text">Ghi âm hoặc upload file, nhấn "Tóm tắt cuộc họp" để xem kết quả.</p>
           </div>
-
-          <!-- Results content (hidden until data) -->
           <div id="resultsContent" style="display: none;">
-            <!-- Tabs -->
             <div class="tabs">
               <button class="tab-btn active" data-tab="summary">📌 Tóm tắt</button>
-              <button class="tab-btn" data-tab="actions">✅ Action Items</button>
+              <button class="tab-btn" data-tab="actions">✅ Actions</button>
               <button class="tab-btn" data-tab="transcript">📝 Transcript</button>
+              <button class="tab-btn" data-tab="history">📚 Lịch sử</button>
             </div>
-
-            <!-- Tab: Summary -->
             <div class="tab-content active" id="tab-summary">
               <ul class="summary-list" id="summaryList"></ul>
             </div>
-
-            <!-- Tab: Action Items -->
             <div class="tab-content" id="tab-actions">
               <div class="action-items-list" id="actionItemsList"></div>
             </div>
-
-            <!-- Tab: Transcript -->
             <div class="tab-content" id="tab-transcript">
               <div class="transcript-box" id="transcriptBox"></div>
             </div>
-
-            <!-- Action Buttons -->
+            <div class="tab-content" id="tab-history">
+              <div class="history-list" id="historyList"></div>
+              <div class="history-actions"><button class="btn-danger" id="btnClearHistory">🗑️ Xóa tất cả lịch
+                  sử</button></div>
+            </div>
             <div class="result-actions">
-              <button class="btn-secondary" id="btnCopy" title="Copy tóm tắt + action items">
-                📋 Copy tóm tắt
-              </button>
-              <button class="btn-secondary" id="btnMarkdown" title="Copy dạng Markdown">
-                📝 Xuất Markdown
-              </button>
+              <button class="btn-secondary" id="btnCopy" title="Copy tóm tắt + action items">📋 Copy tóm tắt</button>
+              <button class="btn-secondary" id="btnMarkdown" title="Copy dạng Markdown">📝 Xuất Markdown</button>
             </div>
           </div>
         </div>
@@ -1101,18 +1448,8 @@
     </div>
   </div>
 
-  <!-- Toast container -->
   <div class="toast-container" id="toastContainer"></div>
-
-  <!--
-    ╔══════════════════════════════════════════════════╗
-    ║  CHROME EXTENSION NOTES:                        ║
-    ║  - Script này sẽ là popup.js                    ║
-    ║  - Không cần thay đổi gì trong code JS          ║
-    ║  - StorageHelper đã sẵn sàng chuyển sang        ║
-    ║    chrome.storage.local nếu cần                 ║
-    ╚══════════════════════════════════════════════════╝
-  -->
   <script src="popup.js"></script>
 </body>
+
 </html>
